@@ -1,0 +1,278 @@
+#include "fsm_automatic.h"
+void init_automatic_mode() {
+//    light_state1 = RED_STATE;
+//    light_state2 = GREEN_STATE;
+//
+//    Red_Counter_temp1    = Red_Counter;
+//    Green_Counter_temp1  = Green_Counter;
+//    Yellow_Counter_temp1 = Yellow_Counter;
+//
+//    Red_Counter_temp2    = Red_Counter;
+//    Green_Counter_temp2  = Green_Counter;
+//    Yellow_Counter_temp2 = Yellow_Counter;
+
+	if (Red_Counter != Green_Counter + Yellow_Counter) {
+	         // Tự động tính lại Green nếu sai lệch
+	         if(Red_Counter > Yellow_Counter)
+	             Green_Counter = Red_Counter - Yellow_Counter;
+	         else {
+	             // Fallback nếu dữ liệu sai hoàn toàn
+	             Red_Counter = 5; Yellow_Counter = 2; Green_Counter = 3;
+	         }
+	    }
+
+	    // 2. Thiết lập trạng thái ban đầu: ĐỎ - XANH (Thay vì Đỏ - Vàng)
+	    light_state1 = RED_STATE;
+	    light_state2 = GREEN_STATE; // <--- SỬA Ở ĐÂY (Code cũ có thể bạn đang để nhầm hoặc logic sai)
+
+	    // 3. Nạp thời gian cho các biến đếm chạy (temp)
+	    // Đèn 1 bắt đầu là ĐỎ
+	    Red_Counter_temp1    = Red_Counter;
+	    Green_Counter_temp1  = Green_Counter;
+	    Yellow_Counter_temp1 = Yellow_Counter;
+
+	    // Đèn 2 bắt đầu là XANH -> Phải nạp thời gian XANH vào biến đếm hiện tại
+	    Red_Counter_temp2    = Red_Counter;
+	    Green_Counter_temp2  = Green_Counter; // <--- QUAN TRỌNG: Đếm Green trước
+	    Yellow_Counter_temp2 = Yellow_Counter;
+}
+
+//void fsm_automatic_run()
+//{
+//    if (system_state != NORMAL_STATE) return;
+//
+//    // ====================================================
+//    // NÚT BẤM CHUYỂN SANG TUNNING
+//    // ====================================================
+//    if (is_button_pressed(0)) {
+//    	system_state = TUNNING_STATE;
+//    	            setting_state = TUNNING_RED_STATE; // Vào Mode 2
+//
+//    	            // Load giá trị hiện tại vào biến tạm để chỉnh sửa
+//    	            Pre_Red_Counter = Red_Counter;
+//
+//    	            // Reset timer nháy đèn cho Mode 2
+//    	            setTimer0(250); // 2Hz = 500ms chu kỳ -> toggle mỗi 250ms
+//    	            blink = 0;
+//
+//    	            lcd_clear_display();
+//    }
+//
+//
+//    if (system_state == NORMAL_STATE) {
+//    		// TL1
+//    	 if (!timer2_flag) return;
+//    	    timer2_flag = 0;
+//
+//    	    //====================================================
+//    	    //                XỬ LÝ TRAFFIC LIGHT 1
+//    	    //====================================================
+//    	    switch (light_state1)
+//    	    {
+//    	        case RED_STATE:
+//    	            RGB_TrafficLight_TurnOn(RGB_tl1, RED_STATE);
+//    	            if (Red_Counter_temp1 == 0) {
+//    	                Red_Counter_temp1 = Red_Counter;
+//    	                Green_Counter_temp1 = Green_Counter;     // chuyển sang GREEN
+//    	                light_state1 = GREEN_STATE;
+//    	            } else {
+//    	                Red_Counter_temp1--;
+//    	            }
+//    	            break;
+//
+//    	        case GREEN_STATE:
+//    	            RGB_TrafficLight_TurnOn(RGB_tl1, GREEN_STATE);
+//    	            if (Green_Counter_temp1 == 0) {
+//    	                Green_Counter_temp1 = Green_Counter;
+//    	                Yellow_Counter_temp1 = Yellow_Counter;   // chuyển sang YELLOW
+//    	                light_state1 = YELLOW_STATE;
+//    	            } else {
+//    	                Green_Counter_temp1--;
+//    	            }
+//    	            break;
+//
+//    	        case YELLOW_STATE:
+//    	            RGB_TrafficLight_TurnOn(RGB_tl1, YELLOW_STATE);
+//    	            if (Yellow_Counter_temp1 == 0) {
+//    	                Yellow_Counter_temp1 = Yellow_Counter;
+//    	                Red_Counter_temp1 = Red_Counter;         // quay lại RED
+//    	                light_state1 = RED_STATE;
+//    	            } else {
+//    	                Yellow_Counter_temp1--;
+//    	            }
+//    	            break;
+//    	    }
+//    	    //====================================================
+//    	    //                XỬ LÝ TRAFFIC LIGHT 2
+//    	    //====================================================
+//    	    switch (light_state2)
+//    	    {
+//    	        case RED_STATE:
+//    	            RGB_TrafficLight_TurnOn(RGB_tl2, RED_STATE);
+//    	            if (Red_Counter_temp2 == 0) {
+//    	                Red_Counter_temp2 = Red_Counter;
+//    	                Green_Counter_temp2 = Green_Counter;
+//    	                light_state2 = GREEN_STATE;
+//    	            } else {
+//    	                Red_Counter_temp2--;
+//    	            }
+//    	            break;
+//
+//    	        case GREEN_STATE:
+//    	            RGB_TrafficLight_TurnOn(RGB_tl2, GREEN_STATE);
+//    	            if (Green_Counter_temp2 == 0) {
+//    	                Green_Counter_temp2 = Green_Counter;
+//    	                Yellow_Counter_temp2 = Yellow_Counter;
+//    	                light_state2 = YELLOW_STATE;
+//    	            } else {
+//    	                Green_Counter_temp2--;
+//    	            }
+//    	            break;
+//
+//    	        case YELLOW_STATE:
+//    	            RGB_TrafficLight_TurnOn(RGB_tl2, YELLOW_STATE);
+//    	            if (Yellow_Counter_temp2 == 0) {
+//    	                Yellow_Counter_temp2 = Yellow_Counter;
+//    	                Red_Counter_temp2 = Red_Counter;
+//    	                light_state2 = RED_STATE;
+//    	            } else {
+//    	                Yellow_Counter_temp2--;
+//    	            }
+//    	            break;
+//    	    }
+//
+//    	    setTimer2(10000);
+//    	}
+//    if (timer3_flag) {
+//          timer3_flag = 0;
+//
+//          updateLCDBuffer();
+//
+//          // chọn tốc độ update
+//          setTimer3(500);
+//      }
+//  }
+void fsm_automatic_run()
+{
+    if (system_state != NORMAL_STATE) return;
+
+    // ====================================================
+    // NÚT BẤM CHUYỂN SANG TUNNING (Giữ nguyên)
+    // ====================================================
+    if (is_button_pressed(0)) {
+        system_state = TUNNING_STATE;
+        setting_state = TUNNING_RED_STATE;
+        Pre_Red_Counter = Red_Counter;
+        setTimer0(250);
+        blink = 0;
+        lcd_clear_display();
+        return;
+    }
+
+    // ====================================================
+    //              XỬ LÝ LOGIC AUTO
+    // ====================================================
+    if (system_state == NORMAL_STATE) {
+
+        // --- PHẦN 1: XỬ LÝ ĐÈN TRAFFIC LIGHT (TIMER 2) ---
+        // Thay vì dùng "return", ta dùng "if" để không chặn LCD
+        if (timer2_flag) {
+            timer2_flag = 0;
+
+            // XỬ LÝ ĐÈN 1
+            switch (light_state1)
+            {
+                case RED_STATE:
+                    Red_Counter_temp1--; // <--- QUAN TRỌNG: Trừ trước
+                    if (Red_Counter_temp1 <= 0) { // Kiểm tra ngay sau khi trừ
+                        Red_Counter_temp1 = Red_Counter;
+                        Green_Counter_temp1 = Green_Counter;
+                        light_state1 = GREEN_STATE;
+                        // Cập nhật đèn màu MỚI ngay lập tức
+                        RGB_TrafficLight_TurnOn(RGB_tl1, GREEN_STATE);
+                    } else {
+                        // Giữ đèn màu CŨ
+                        RGB_TrafficLight_TurnOn(RGB_tl1, RED_STATE);
+                    }
+                    break;
+
+                case GREEN_STATE:
+                    Green_Counter_temp1--; // Trừ trước
+                    if (Green_Counter_temp1 <= 0) {
+                        Green_Counter_temp1 = Green_Counter;
+                        Yellow_Counter_temp1 = Yellow_Counter;
+                        light_state1 = YELLOW_STATE;
+                        RGB_TrafficLight_TurnOn(RGB_tl1, YELLOW_STATE);
+                    } else {
+                        RGB_TrafficLight_TurnOn(RGB_tl1, GREEN_STATE);
+                    }
+                    break;
+
+                case YELLOW_STATE:
+                    Yellow_Counter_temp1--; // Trừ trước
+                    if (Yellow_Counter_temp1 <= 0) {
+                        Yellow_Counter_temp1 = Yellow_Counter;
+                        Red_Counter_temp1 = Red_Counter;
+                        light_state1 = RED_STATE;
+                        RGB_TrafficLight_TurnOn(RGB_tl1, RED_STATE);
+                    } else {
+                        RGB_TrafficLight_TurnOn(RGB_tl1, YELLOW_STATE);
+                    }
+                    break;
+            }
+
+            // XỬ LÝ ĐÈN 2 (Logic tương tự)
+            switch (light_state2)
+            {
+                case RED_STATE:
+                    Red_Counter_temp2--;
+                    if (Red_Counter_temp2 <= 0) {
+                        Red_Counter_temp2 = Red_Counter;
+                        Green_Counter_temp2 = Green_Counter;
+                        light_state2 = GREEN_STATE;
+                        RGB_TrafficLight_TurnOn(RGB_tl2, GREEN_STATE);
+                    } else {
+                        RGB_TrafficLight_TurnOn(RGB_tl2, RED_STATE);
+                    }
+                    break;
+
+                case GREEN_STATE:
+                    Green_Counter_temp2--;
+                    if (Green_Counter_temp2 <= 0) {
+                        Green_Counter_temp2 = Green_Counter;
+                        Yellow_Counter_temp2 = Yellow_Counter;
+                        light_state2 = YELLOW_STATE;
+                        RGB_TrafficLight_TurnOn(RGB_tl2, YELLOW_STATE);
+                    } else {
+                        RGB_TrafficLight_TurnOn(RGB_tl2, GREEN_STATE);
+                    }
+                    break;
+
+                case YELLOW_STATE:
+                    Yellow_Counter_temp2--;
+                    if (Yellow_Counter_temp2 <= 0) {
+                        Yellow_Counter_temp2 = Yellow_Counter;
+                        Red_Counter_temp2 = Red_Counter;
+                        light_state2 = RED_STATE;
+                        RGB_TrafficLight_TurnOn(RGB_tl2, RED_STATE);
+                    } else {
+                        RGB_TrafficLight_TurnOn(RGB_tl2, YELLOW_STATE);
+                    }
+                    break;
+            }
+
+            // Reset Timer cho lần đếm tiếp theo (1 giây)
+            // SỬA: Dùng 1000 cho 1s (Nếu timer tick 1ms) hoặc 100 (nếu tick 10ms)
+            // Giá trị 10000 của bạn là quá lớn (10 giây hoặc 100 giây)
+            setTimer2(25000);
+        }
+
+        // --- PHẦN 2: XỬ LÝ MÀN HÌNH LCD (TIMER 3) ---
+        // Code này nằm ngoài khối if(timer2_flag) nên luôn được kiểm tra
+        if (timer3_flag) {
+            timer3_flag = 0;
+            updateLCDBuffer();
+            setTimer3(500); // 0.5s cập nhật LCD 1 lần
+        }
+    }
+}
