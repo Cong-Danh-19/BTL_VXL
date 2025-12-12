@@ -33,7 +33,7 @@ void init_automatic_mode() {
 
 	    // Đèn 2 bắt đầu là XANH -> Phải nạp thời gian XANH vào biến đếm hiện tại
 	    Red_Counter_temp2    = Red_Counter;
-	    Green_Counter_temp2  = Green_Counter;
+	    Green_Counter_temp2  = Green_Counter; // <--- QUAN TRỌNG: Đếm Green trước
 	    Yellow_Counter_temp2 = Yellow_Counter;
 }
 

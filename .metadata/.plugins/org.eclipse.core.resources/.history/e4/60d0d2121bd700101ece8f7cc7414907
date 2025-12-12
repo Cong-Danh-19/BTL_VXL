@@ -102,8 +102,8 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  button_init();
-  lcd_init();
+    button_init();
+    lcd_init();
 
     RGB_TrafficLight_Init(&RGB_tl1, MODULED_1A_Pin, MODULED_1B_Pin,
                           MODULED_1A_GPIO_Port, MODULED_1B_GPIO_Port);
@@ -115,8 +115,8 @@ int main(void)
       // === CÀI ĐẶT SCHEDULER ===
       SCH_Init();
 
+      // Thêm các tác vụ vào Scheduler (Chu kỳ Timer2 là 10ms)
 
-      SCH_Add_Task(timer_run, 0, 1);
       // 1. Quét phím: Chạy mỗi 10ms (Period = 1)
       SCH_Add_Task(getKeyInput, 0, 1);
 
@@ -316,6 +316,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	        // Cập nhật bộ đếm của Scheduler
 	        SCH_Update();
 
+	        // Vẫn gọi timer_run() để giảm biến đếm (timer2_counter, timer3_counter...)
+	        // dùng cho logic bên trong các hàm FSM.
+	        timer_run();
 	}
 }
 /* USER CODE END 4 */
