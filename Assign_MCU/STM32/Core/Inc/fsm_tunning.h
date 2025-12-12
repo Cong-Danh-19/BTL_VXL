@@ -1,0 +1,21 @@
+/*
+ * fsm_tunning.h
+ *
+ *  Created on: Dec 9, 2025
+ *      Author: dell pro
+ */
+
+#ifndef INC_FSM_TUNNING_H_
+#define INC_FSM_TUNNING_H_
+#include"button.h"
+#include "global.h"
+#include "led_traffic.h"
+#include "lcd_i2c.h"
+#include "software_timer.h"
+#include "fsm_automatic.h"
+void fsm_tunning_run();
+void fsm_tunning_green();
+void fsm_tunning_yellow();
+void  fsm_tunning_red();
+void blink_tunning_light() ;
+#endif /* INC_FSM_TUNNING_H_ */

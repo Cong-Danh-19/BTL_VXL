@@ -1,0 +1,4 @@
+led_traffic.c:9:6:RGB_TrafficLight_Init	24	static
+led_traffic.c:20:6:RGB_TrafficLight_TurnOn	32	static
+led_traffic.c:39:6:RGB_TrafficLight_Blink	32	static
+led_traffic.c:50:6:updateBlink	4	static

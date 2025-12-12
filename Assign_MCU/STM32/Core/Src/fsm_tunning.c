@@ -1,0 +1,169 @@
+#include "fsm_tunning.h"
+// Timer dùng để nháy
+
+
+void blink_tunning_light() {
+    if(system_state != TUNNING_STATE) return;
+
+    if(timer0_flag) {
+    	timer0_flag = 0;
+        setTimer0(2000);
+        blink = 1 - blink;
+        switch(setting_state) {
+            case TUNNING_RED_STATE:
+                RGB_TrafficLight_Blink(RGB_tl1, RED_STATE);
+                RGB_TrafficLight_Blink(RGB_tl2, RED_STATE);
+                break;
+
+            case TUNNING_YELLOW_STATE:
+                RGB_TrafficLight_Blink(RGB_tl1, YELLOW_STATE);
+                RGB_TrafficLight_Blink(RGB_tl2, YELLOW_STATE);
+                break;
+
+            case TUNNING_GREEN_STATE:
+                RGB_TrafficLight_Blink(RGB_tl1, GREEN_STATE);
+                RGB_TrafficLight_Blink(RGB_tl2, GREEN_STATE);
+                break;
+        }
+    }
+}
+
+
+/**********************************************************
+ *                FSM TUNNING FOR RED
+ **********************************************************/
+void fsm_tunning_red() {
+
+    if(system_state == TUNNING_STATE && setting_state == TUNNING_RED_STATE) {
+
+        // BUTTON 1 → THOÁT
+        if(is_button_pressed(0)) {
+            // reset giá trị
+            Pre_Red_Counter = Pre_Yellow_Counter = Pre_Green_Counter = 1;
+
+            // trở về NORMAL giống MODE 1
+            light_state1 = RED_STATE;
+            light_state2 = GREEN_STATE;
+            init_automatic_mode();
+            system_state = NORMAL_STATE;
+            return;
+        }
+
+        // BUTTON 2 → TĂNG GIÁ TRỊ
+        if(is_button_auto_increase(1)) {
+            Pre_Red_Counter++;
+            if(Pre_Red_Counter >= 100) Pre_Red_Counter = 1;
+        }
+        else if(is_button_pressed(1)) {
+            Pre_Red_Counter++;
+            if(Pre_Red_Counter >= 100) Pre_Red_Counter = 1;
+        }
+
+        // BUTTON 3 → LƯU VÀ QUA STAGE TIẾP THEO
+        if(is_button_pressed(2)) {
+            Red_Counter = Pre_Red_Counter;
+            setting_state = TUNNING_YELLOW_STATE;
+            Pre_Red_Counter = 1;
+        }
+    }
+}
+
+
+/**********************************************************
+ *                FSM TUNNING FOR YELLOW
+ **********************************************************/
+void fsm_tunning_yellow() {
+
+    if(system_state == TUNNING_STATE && setting_state == TUNNING_YELLOW_STATE) {
+
+        // BTN1 → THOÁT
+        if(is_button_pressed(0)) {
+            Pre_Red_Counter = Pre_Yellow_Counter = Pre_Green_Counter = 1;
+            light_state1 = RED_STATE;
+            light_state2 = GREEN_STATE;
+            init_automatic_mode();
+            system_state = NORMAL_STATE;
+            return;
+        }
+
+        // BTN2 → TĂNG
+        if(is_button_auto_increase(1)) {
+            Pre_Yellow_Counter++;
+            if(Pre_Yellow_Counter >= 100) Pre_Yellow_Counter = 1;
+        }
+        else if(is_button_pressed(1)) {
+            Pre_Yellow_Counter++;
+            if(Pre_Yellow_Counter >= 100) Pre_Yellow_Counter = 1;
+        }
+
+        // BTN3 → LƯU
+        if(is_button_pressed(2)) {
+            Yellow_Counter = Pre_Yellow_Counter;
+            setting_state = TUNNING_GREEN_STATE;
+            Pre_Yellow_Counter = 1;
+        }
+    }
+}
+
+
+/**********************************************************
+ *                FSM TUNNING FOR GREEN
+ **********************************************************/
+void fsm_tunning_green() {
+
+    if(system_state == TUNNING_STATE && setting_state == TUNNING_GREEN_STATE) {
+
+        // BTN1 → THOÁT
+        if(is_button_pressed(0)) {
+            Pre_Red_Counter = Pre_Yellow_Counter = Pre_Green_Counter = 1;
+            light_state1 = RED_STATE;
+            light_state2 = GREEN_STATE;
+            init_automatic_mode();
+            system_state = NORMAL_STATE;
+            return;
+        }
+
+        // BTN2 → TĂNG
+        if(is_button_auto_increase(1)) {
+            Pre_Green_Counter++;
+            if(Pre_Green_Counter >= 100) Pre_Green_Counter = 1;
+        }
+        else if(is_button_pressed(1)) {
+            Pre_Green_Counter++;
+            if(Pre_Green_Counter >= 100) Pre_Green_Counter = 1;
+        }
+
+        // BTN3 → LƯU VÀ THOÁT
+        if(is_button_pressed(2)) {
+            Green_Counter = Pre_Green_Counter;
+
+            // áp quy tắc RED = YELLOW + GREEN
+            Red_Counter = Yellow_Counter + Green_Counter;
+            init_automatic_mode();
+            system_state = NORMAL_STATE;
+            Pre_Green_Counter = 1;
+        }
+    }
+}
+
+
+/**********************************************************
+ *                      RUN
+ **********************************************************/
+void fsm_tunning_run() {
+    if(system_state != TUNNING_STATE) return;
+
+    blink_tunning_light();
+
+    fsm_tunning_red();
+    fsm_tunning_yellow();
+    fsm_tunning_green();
+    if (timer3_flag) {
+           timer3_flag = 0;
+
+           updateLCDBuffer();
+
+           // chọn tốc độ update
+           setTimer3(10000);   // 0.2s update 1 lần
+       }
+}
