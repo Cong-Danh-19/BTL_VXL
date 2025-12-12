@@ -1,6 +1,5 @@
 #include "fsm_manual.h"
-#define LCD_REFRESH_RATE 25 // Nếu system tick là 10ms, 25*10 = 250ms
-static uint8_t lcd_counter = 0;
+
 void manual_init(void)
 {
     manual_state = MANUAL_WAIT_STATE;
@@ -20,8 +19,6 @@ void fsm_manual_run(void)
         system_state = NORMAL_STATE;
         manual_state = MANUAL_WAIT_STATE;
         wait_switch_flag = 0;
-        init_automatic_mode();
-        timer2_flag = 0;
         return;
     }
 
@@ -35,7 +32,6 @@ void fsm_manual_run(void)
         setTimer0(1000);   // đếm giây
         wait_switch_flag = 0;
 
-        updateLCDBuffer();
         return;
     }
 
@@ -105,10 +101,5 @@ void fsm_manual_run(void)
     }
 
     /* ================== Cập nhật LCD ================== */
-    lcd_counter++;
-        if (lcd_counter >= LCD_REFRESH_RATE)
-        {
-            lcd_counter = 0;
-            updateLCDBuffer();
-        }
+    updateLCDBuffer();
 }

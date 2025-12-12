@@ -1,6 +1,31 @@
 #include "fsm_automatic.h"
 void init_automatic_mode() {
 
+
+//	if (Red_Counter != Green_Counter + Yellow_Counter) {
+//	         // Tự động tính lại Green nếu sai lệch
+//	         if(Red_Counter > Yellow_Counter)
+//	             Green_Counter = Red_Counter - Yellow_Counter;
+//	         else {
+//	             // Fallback nếu dữ liệu sai hoàn toàn
+//	             Red_Counter = 5; Yellow_Counter = 2; Green_Counter = 3;
+//	         }
+//	    }
+//
+//	    // 2. Thiết lập trạng thái ban đầu: ĐỎ - XANH (Thay vì Đỏ - Vàng)
+//	    light_state1 = RED_STATE;
+//	    light_state2 = GREEN_STATE; // <--- SỬA Ở ĐÂY (Code cũ có thể bạn đang để nhầm hoặc logic sai)
+//
+//	    // 3. Nạp thời gian cho các biến đếm chạy (temp)
+//	    // Đèn 1 bắt đầu là ĐỎ
+//	    Red_Counter_temp1    = Red_Counter;
+//	    Green_Counter_temp1  = Green_Counter;
+//	    Yellow_Counter_temp1 = Yellow_Counter;
+//
+//	    // Đèn 2 bắt đầu là XANH -> Phải nạp thời gian XANH vào biến đếm hiện tại
+//	    Red_Counter_temp2    = Red_Counter;
+//	    Green_Counter_temp2  = Green_Counter;
+//	    Yellow_Counter_temp2 = Yellow_Counter;
 	if (Red_Counter != Green_Counter + Yellow_Counter) {
 	        if(Red_Counter > Yellow_Counter)
 	            Green_Counter = Red_Counter - Yellow_Counter;

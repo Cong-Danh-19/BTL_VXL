@@ -143,9 +143,8 @@ void fsm_tunning_green() {
 
             // áp quy tắc RED = YELLOW + GREEN
             Red_Counter = Yellow_Counter + Green_Counter;
-            system_state = NORMAL_STATE;
             init_automatic_mode();
-
+            system_state = NORMAL_STATE;
             updateLCDBuffer();
 
             Pre_Green_Counter = 1;

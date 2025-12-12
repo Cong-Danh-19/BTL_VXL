@@ -20,8 +20,6 @@ void fsm_manual_run(void)
         system_state = NORMAL_STATE;
         manual_state = MANUAL_WAIT_STATE;
         wait_switch_flag = 0;
-        init_automatic_mode();
-        timer2_flag = 0;
         return;
     }
 

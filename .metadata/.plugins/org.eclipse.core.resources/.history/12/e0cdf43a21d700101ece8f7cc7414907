@@ -128,10 +128,10 @@ int main(void)
       /* USER CODE END 2 */
 
   /* USER CODE END 2 */
-//   setTimer0(2000);
-//   setTimer1(3000);
-//   setTimer2(10000);
-//   setTimer3(1000);
+   setTimer0(2000);
+   setTimer1(3000);
+   setTimer2(10000);
+   setTimer3(1000);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

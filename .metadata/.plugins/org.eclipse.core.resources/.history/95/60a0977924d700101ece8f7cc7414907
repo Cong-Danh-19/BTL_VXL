@@ -12,7 +12,6 @@
 #include "led_traffic.h"
 #include "lcd_i2c.h"
 #include"global.h"
-#include "fsm_automatic.h"
 void manual_init(void);
 void fsm_manual_run(void);
 

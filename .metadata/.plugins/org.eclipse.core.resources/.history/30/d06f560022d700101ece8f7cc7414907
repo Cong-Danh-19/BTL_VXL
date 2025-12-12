@@ -44,10 +44,8 @@ void fsm_tunning_red() {
             // trở về NORMAL giống MODE 1
             light_state1 = RED_STATE;
             light_state2 = GREEN_STATE;
-            system_state = NORMAL_STATE;
             init_automatic_mode();
-            updateLCDBuffer();
-
+            system_state = NORMAL_STATE;
             return;
         }
 
@@ -83,10 +81,8 @@ void fsm_tunning_yellow() {
             Pre_Red_Counter = Pre_Yellow_Counter = Pre_Green_Counter = 1;
             light_state1 = RED_STATE;
             light_state2 = GREEN_STATE;
-            system_state = NORMAL_STATE;
             init_automatic_mode();
-            updateLCDBuffer();
-
+            system_state = NORMAL_STATE;
             return;
         }
 
@@ -143,9 +139,8 @@ void fsm_tunning_green() {
 
             // áp quy tắc RED = YELLOW + GREEN
             Red_Counter = Yellow_Counter + Green_Counter;
-            system_state = NORMAL_STATE;
             init_automatic_mode();
-
+            system_state = NORMAL_STATE;
             updateLCDBuffer();
 
             Pre_Green_Counter = 1;

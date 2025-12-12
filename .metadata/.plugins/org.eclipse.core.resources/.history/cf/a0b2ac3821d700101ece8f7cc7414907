@@ -1,49 +1,40 @@
 #include "fsm_automatic.h"
 void init_automatic_mode() {
+//    light_state1 = RED_STATE;
+//    light_state2 = GREEN_STATE;
+//
+//    Red_Counter_temp1    = Red_Counter;
+//    Green_Counter_temp1  = Green_Counter;
+//    Yellow_Counter_temp1 = Yellow_Counter;
+//
+//    Red_Counter_temp2    = Red_Counter;
+//    Green_Counter_temp2  = Green_Counter;
+//    Yellow_Counter_temp2 = Yellow_Counter;
 
 	if (Red_Counter != Green_Counter + Yellow_Counter) {
-	        if(Red_Counter > Yellow_Counter)
-	            Green_Counter = Red_Counter - Yellow_Counter;
-	        else {
-	            Red_Counter = 5; Yellow_Counter = 2; Green_Counter = 3;
-	        }
+	         // Tự động tính lại Green nếu sai lệch
+	         if(Red_Counter > Yellow_Counter)
+	             Green_Counter = Red_Counter - Yellow_Counter;
+	         else {
+	             // Fallback nếu dữ liệu sai hoàn toàn
+	             Red_Counter = 5; Yellow_Counter = 2; Green_Counter = 3;
+	         }
 	    }
 
-	    // 2. KHÔNG ép cứng trạng thái về RED.
-	    // Hãy kiểm tra trạng thái hiện tại (được set bởi Manual hoặc khởi động)
+	    // 2. Thiết lập trạng thái ban đầu: ĐỎ - XANH (Thay vì Đỏ - Vàng)
+	    light_state1 = RED_STATE;
+	    light_state2 = GREEN_STATE; // <--- SỬA Ở ĐÂY (Code cũ có thể bạn đang để nhầm hoặc logic sai)
 
-	    // TRƯỜNG HỢP A: Nếu Manual đang để đèn 1 là XANH
-	    if (light_state1 == GREEN_STATE)
-	    {
-	        light_state2 = RED_STATE; // Đèn 2 bắt buộc phải ĐỎ
+	    // 3. Nạp thời gian cho các biến đếm chạy (temp)
+	    // Đèn 1 bắt đầu là ĐỎ
+	    Red_Counter_temp1    = Red_Counter;
+	    Green_Counter_temp1  = Green_Counter;
+	    Yellow_Counter_temp1 = Yellow_Counter;
 
-	        // Nạp thời gian cho trạng thái XANH - ĐỎ
-	        Green_Counter_temp1  = Green_Counter; // Đèn 1 đếm XANH
-	        Red_Counter_temp2    = Red_Counter;   // Đèn 2 đếm ĐỎ
-
-	        // Đảm bảo bật đúng đèn ngay lập tức
-	        RGB_TrafficLight_TurnOn(RGB_tl1, GREEN_STATE);
-	        RGB_TrafficLight_TurnOn(RGB_tl2, RED_STATE);
-	    }
-	    // TRƯỜNG HỢP B: Nếu Manual đang để ĐỎ (hoặc các màu khác, mặc định về ĐỎ)
-	    else
-	    {
-	        light_state1 = RED_STATE;
-	        light_state2 = GREEN_STATE; // Đèn 2 bắt buộc phải XANH
-
-	        // Nạp thời gian cho trạng thái ĐỎ - XANH
-	        Red_Counter_temp1    = Red_Counter;   // Đèn 1 đếm ĐỎ
-	        Green_Counter_temp2  = Green_Counter; // Đèn 2 đếm XANH
-
-	        // Đảm bảo bật đúng đèn ngay lập tức
-	        RGB_TrafficLight_TurnOn(RGB_tl1, RED_STATE);
-	        RGB_TrafficLight_TurnOn(RGB_tl2, GREEN_STATE);
-	    }
-
-	    setTimer0(2000);
-	    setTimer1(3000);
-	    setTimer2(10000);
-	    setTimer3(1000);
+	    // Đèn 2 bắt đầu là XANH -> Phải nạp thời gian XANH vào biến đếm hiện tại
+	    Red_Counter_temp2    = Red_Counter;
+	    Green_Counter_temp2  = Green_Counter;
+	    Yellow_Counter_temp2 = Yellow_Counter;
 }
 
 
